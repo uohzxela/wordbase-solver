@@ -1,11 +1,8 @@
 # wordbase-solver
 
-OpenCV used for image processing
-* Simple threshold
-* Finding contours
-
-Tesseract used for optical character recognition
-* pytesseract library
+Dependencies
+* OpenCV and Python bindings 
+* [pytesseract](https://github.com/madmaze/pytesseract)
 
 Usage
 * `cd wordbase-solver/src`

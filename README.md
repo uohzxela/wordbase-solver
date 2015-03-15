@@ -13,7 +13,7 @@ Usage
 
 To-do list
 
-1. ~~Extract out gameboard in 2D array of characters~~
+1. ~~Extract out gameboard represented by a 2D array of characters~~
 2. Implement a dictionary data structure with O(w) lookup where w is the length of the word
   * Tries? Sorted sets? 
 3. Use DFS to find all valid words in 2D array according to the dictionary

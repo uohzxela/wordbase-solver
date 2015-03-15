@@ -1,10 +1,10 @@
 # wordbase-solver
 
-OpenCV for image processing
-* Simple thresholding
+OpenCV used for image processing
+* Simple threshold
 * Finding contours
 
-Tesseract for optical character recognition
+Tesseract used for optical character recognition
 * pytesseract library
 
 Progress: 40% (Able to extract all letters accurately from a static image)

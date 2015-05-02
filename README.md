@@ -3,6 +3,7 @@
 Dependencies
 * OpenCV and Python bindings 
 * [pytesseract](https://github.com/madmaze/pytesseract)
+* Boost
 
 Usage
 * `cd wordbase-solver/src`

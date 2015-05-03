@@ -1,21 +1,18 @@
-import extract_gameboard
-import simple_tst as tst
-
+import extractor
+import tst 
 
 def make_graph(matrix):
 	root = None
 	graph = {root: set() }
-	chardict = { root: ''}
 
 	for i, row in enumerate(matrix):
 		for j, char in enumerate(row):
-			chardict[(i,j)] = char
 			node = (i, j)
 			children = set()
 			graph[node] = children
 			graph[root].add(node)
 			add_children(node, children, matrix)
-	return graph, chardict
+	return graph
 
 def add_children(node, children, matrix):
 	x0, y0 = node
@@ -29,32 +26,29 @@ def add_children(node, children, matrix):
 				continue
 			children.add((x,y))
 
-def to_word(chardict, pos_list):
-	return ''.join(chardict[x] for x in pos_list)
+def to_word(matrix, pos_list):
+	return ''.join(matrix[pos[0]][pos[1]] for pos in pos_list if pos is not None)
 
-def find_words(graph, chardict, position, prefix, results, root):
+def find_words(graph, matrix, position, prefix, results, dictionary):
 	prefix.append(position)
-	word = to_word(chardict, prefix).upper()
-	print word 
+	word = to_word(matrix, prefix).upper()
 	if len(word) >= 2:
-		if tst.search(root, word):
-			print "added"
+		(is_valid, is_prefix) = dictionary.find(word)
+		if is_valid:
 			results.add(word)
-		else:
-			print 'rejected'
+		elif not is_prefix:
 			return
 	for child in graph[position]:
-		print prefix
 		if child not in prefix:
-			prefix2 = list(prefix)
-			find_words(graph, chardict, child, prefix2, results, root)
+			child_prefix = list(prefix)
+			find_words(graph, matrix, child, child_prefix, results, dictionary)
 	return
 
-matrix = extract_gameboard.get_matrix("wordbase.png")
+matrix = extractor.get_matrix("wordbase.png")
 # matrix = [['C', 'A'], ['T', 'B']]
-root = tst.get_root()
-graph, chardict = make_graph(matrix)
+dictionary = tst.TernarySearchTree()
+graph = make_graph(matrix)
 res = set()
-find_words(graph, chardict, None, [], res, root)
+find_words(graph, matrix, None, [], res, dictionary)
 
 print res 

@@ -50,18 +50,27 @@ def opencv_to_pil(opencv_im):
 	pil_im = Image.fromarray(opencv_im)
 	return pil_im
 
+def get_gameboard(img):
+  	image_file_path = img
+	pil_image = resize_and_crop(image_file_path)
+	opencv_image = pil_to_opencv(pil_image)
+	thresh = simple_threshold(opencv_image)
+	opencv_image = find_contours_and_invert(thresh)
+	pil_image = opencv_to_pil(opencv_image)
+	gameboard = pytesseract.image_to_string(pil_image, config="-psm 6")
+	return gameboard
+
+def get_matrix(img):
+	gameboard = get_gameboard(img)
+	characters = [char for char in gameboard if char.isalnum()]
+	matrix = [[characters[x*10 + y] for y in range(0,10)] for x in range(0,13)]
+	return matrix
+
 def main():
 	if len(sys.argv) == 2:
-		image_file_path = sys.argv[1]
-		pil_image = resize_and_crop(image_file_path)
-		opencv_image = pil_to_opencv(pil_image)
-		thresh = simple_threshold(opencv_image)
-		opencv_image = find_contours_and_invert(thresh)
-		pil_image = opencv_to_pil(opencv_image)
-		gameboard = pytesseract.image_to_string(pil_image, config="-psm 6")
-		print gameboard
+		print get_gameboard(sys.argv[1])
 	else:
-		sys.stderr.write('Usage: python extract_game_board_text.py image_file_path\n')
+		sys.stderr.write('Usage: python extract_gameboard.py image_file_path\n')
 		exit(2)
 
 if __name__ == '__main__':

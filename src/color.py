@@ -5,7 +5,7 @@ WHITE = 0
 ORANGE = 1
 BLUE = 2
 BLACK = 3
-img = cv2.imread('cropped.png')
+img = cv2.imread('../images/cropped.png')
 a = np.zeros(shape=(13,10))
 for x in xrange(0, 832, 64):
 	for y in xrange(0, 640, 64):

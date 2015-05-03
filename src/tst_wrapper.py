@@ -1,11 +1,15 @@
 import sys
-import simple_tst
+import tst
 
-root = None
+t = None
 if __name__ == "__main__":
     while True:
-        if not root:
-            root = simple_tst.get_root()
+        if not t:
+            t = tst.TernarySearchTree()
         print "Input search term:"
         word = sys.stdin.readline().strip()
-        print simple_tst.search(root, word)
+        (is_valid, is_prefix) = t.find(word)
+        print "is prefix?"
+        print is_prefix
+        print "is valid?"
+        print is_valid

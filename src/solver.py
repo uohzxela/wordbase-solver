@@ -51,12 +51,12 @@ def find_words(graph, matrix, position, prefix, results, dictionary):
 			child_prefix = list(prefix)
 			find_words(graph, matrix, child, child_prefix, results, dictionary)
 	return
-	
+
 def main():
 	try:
-		if len(sys.argv) == 2:
+		if len(sys.argv) == 3:
 			player = PLAYER_MAP[sys.argv[1].lower()]
-			matrix, color_map = extractor.get_matrix("wordbase.png")
+			matrix, color_map = extractor.get_matrix(sys.argv[2])
 			dictionary = tst.TernarySearchTree()
 			graph = make_graph(matrix, color_map, player)
 			res = set()
@@ -65,7 +65,7 @@ def main():
 		else:
 			raise Exception("Wrong number of arguments!")
 	except:
-		sys.stderr.write('Usage: python solver.py [blue/orange]\n')
+		sys.stderr.write('Usage: python solver.py [blue/orange] [/path/to/screenshot.jpg]\n')
 		exit(2)
 if __name__ == '__main__':
     main()

@@ -8,7 +8,7 @@ Usage
 * `cd wordbase-solver/src`
 * `python extract_game_board_text.py wordbase.png` to print out the gameboard in console
 * `python tst_wrapper.py` to try out the ternary search tree loaded with dictionary 
-* `python solver.py [blue/orange]` to find suitable words in the given screenshot, given the player color
+* `python solver.py [blue/orange] [/path/to/screenshot.jpg]` to find suitable words in the given screenshot, given the player color
 
 To-do list
 

@@ -1,7 +1,13 @@
 import extractor
-import tst 
+import tst
+WHITE = 0
+ORANGE = 1
+BLUE = 2
+BLACK = 3
 
-def make_graph(matrix):
+player = BLUE
+
+def make_graph(matrix, color_map):
 	root = None
 	graph = {root: set() }
 
@@ -10,7 +16,8 @@ def make_graph(matrix):
 			node = (i, j)
 			children = set()
 			graph[node] = children
-			graph[root].add(node)
+			if player == color_map[i, j]:
+				graph[root].add(node)
 			add_children(node, children, matrix)
 	return graph
 
@@ -44,11 +51,12 @@ def find_words(graph, matrix, position, prefix, results, dictionary):
 			find_words(graph, matrix, child, child_prefix, results, dictionary)
 	return
 
-matrix = extractor.get_matrix("wordbase.png")
+matrix, color_map = extractor.get_matrix("wordbase.png")
 # matrix = [['C', 'A'], ['T', 'B']]
 dictionary = tst.TernarySearchTree()
-graph = make_graph(matrix)
+graph = make_graph(matrix, color_map)
 res = set()
 find_words(graph, matrix, None, [], res, dictionary)
 
 print res 
+print color_map

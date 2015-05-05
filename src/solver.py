@@ -1,6 +1,7 @@
 import extractor
 import tst
 import sys
+from operator import itemgetter
 
 WHITE = 0
 ORANGE = 1
@@ -37,13 +38,16 @@ def add_children(node, children, matrix):
 def to_word(matrix, pos_list):
 	return ''.join(matrix[pos[0]][pos[1]] for pos in pos_list if pos is not None)
 
+def get_weight(pos_list):
+	return sum(pos[0] for pos in pos_list if pos is not None)
+
 def find_words(graph, matrix, position, prefix, results, dictionary):
 	prefix.append(position)
 	word = to_word(matrix, prefix).upper()
 	if len(word) >= 2:
 		(is_valid, is_prefix) = dictionary.find(word)
 		if is_valid:
-			results.add(word)
+			results.add((word, prefix[-1][0]))
 		elif not is_prefix:
 			return
 	for child in graph[position]:
@@ -53,19 +57,24 @@ def find_words(graph, matrix, position, prefix, results, dictionary):
 	return
 
 def main():
-	try:
+	# try:
 		if len(sys.argv) == 3:
 			player = PLAYER_MAP[sys.argv[1].lower()]
 			matrix, color_map = extractor.get_matrix(sys.argv[2])
+			for i, row in enumerate(matrix):
+				print row
 			dictionary = tst.TernarySearchTree()
 			graph = make_graph(matrix, color_map, player)
 			res = set()
 			find_words(graph, matrix, None, [], res, dictionary)
-			print res
-		else:
-			raise Exception("Wrong number of arguments!")
-	except:
-		sys.stderr.write('Usage: python solver.py [blue/orange] [/path/to/screenshot.jpg]\n')
-		exit(2)
+			res = list(res)
+			# res.sort()
+			print sorted(res, key=itemgetter(1), reverse=True)
+			# print res
+	# 	else:
+	# 		raise Exception("Wrong number of arguments!")
+	# except:
+	# 	sys.stderr.write('Usage: python solver.py [blue/orange] [/path/to/screenshot.jpg]\n')
+	# 	exit(2)
 if __name__ == '__main__':
     main()

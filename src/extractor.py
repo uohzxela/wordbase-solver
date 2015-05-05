@@ -60,7 +60,7 @@ def generate_color_map(opencv_im):
 	a = np.zeros(shape=(13,10))
 	for x in xrange(0, 832, 64):
 		for y in xrange(0, 640, 64):
-			px = img[x, y]
+			px = img[x+1, y+1]
 			# print px
 			blue = px[0]
 			green = px[1]
@@ -89,13 +89,22 @@ def get_gameboard(img):
 
 def get_matrix(img):
 	gameboard, color_map = get_gameboard(img)
-	characters = [char for char in gameboard if char.isalnum()]
+	characters = []
+	for char in gameboard:
+		if char.isalnum():
+			if char == 'l':
+				characters.append('I')
+				continue
+			characters.append(char.upper())
+	# characters = [char for char in gameboard if char.isalnum()]
 	matrix = [[characters[x*10 + y] for y in range(0,10)] for x in range(0,13)]
 	return matrix, color_map
 
 def main():
 	if len(sys.argv) == 2:
-		print get_gameboard(sys.argv[1])
+		gameboard, color_map = get_gameboard(sys.argv[1])
+		print gameboard
+		print color_map
 	else:
 		sys.stderr.write('Usage: python extract_gameboard.py image_file_path\n')
 		exit(2)

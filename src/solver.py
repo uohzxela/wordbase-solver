@@ -2,6 +2,7 @@ import extractor
 import tst
 import sys
 from operator import itemgetter
+import Pyro4
 
 WHITE = 0
 ORANGE = 1
@@ -57,24 +58,26 @@ def find_words(graph, matrix, position, prefix, results, dictionary):
 	return
 
 def main():
-	# try:
+	try:
 		if len(sys.argv) == 3:
 			player = PLAYER_MAP[sys.argv[1].lower()]
 			matrix, color_map = extractor.get_matrix(sys.argv[2])
 			for i, row in enumerate(matrix):
 				print row
 			dictionary = tst.TernarySearchTree()
+			#dictionary = Pyro4.Proxy("PYRONAME:tst.server")
 			graph = make_graph(matrix, color_map, player)
 			res = set()
 			find_words(graph, matrix, None, [], res, dictionary)
 			res = list(res)
-			# res.sort()
-			print sorted(res, key=itemgetter(1), reverse=True)
-			# print res
-	# 	else:
-	# 		raise Exception("Wrong number of arguments!")
-	# except:
-	# 	sys.stderr.write('Usage: python solver.py [blue/orange] [/path/to/screenshot.jpg]\n')
-	# 	exit(2)
+			if player == ORANGE:
+				print sorted(res, key=itemgetter(1), reverse=True)
+			else:
+				print sorted(res, key=itemgetter(1))
+		else:
+			raise Exception("Wrong number of arguments!")
+	except:
+		sys.stderr.write('Usage: python solver.py [blue/orange] [/path/to/screenshot.jpg]\n')
+		exit(2)
 if __name__ == '__main__':
     main()

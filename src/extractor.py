@@ -17,7 +17,9 @@ def resize_and_crop(image_file_path):
 		exit(1)
 	size = (640, 1136)
 	pil_image.thumbnail(size, Image.ANTIALIAS)
+
 	pil_image = pil_image.crop((0,304,640,1136))
+	# pil_image.save("debugging.jpg")
 	return pil_image
 
 def pil_to_opencv(pil_image):
@@ -43,12 +45,16 @@ def find_contours_and_invert(opencv_image):
 		if area > 3000:
 			# cv2.drawContours(im, [cnt], 0, (0, 0, 255), 3)
 			# print cnt
-			start_x = cnt[0][0][1]
-			end_x = cnt[2][0][1] + 1
-			start_y = cnt[0][0][0]
-			end_y = cnt[2][0][0] + 1
+			# print area
+			start_x, end_x, start_y, end_y = find_contour_boundaries(cnt)
 			im[start_x:end_x,start_y:end_y] = 255 - im[start_x:end_x,start_y:end_y]
 	return im
+
+def find_contour_boundaries(cnt):
+	x_list = [cnt[i][0][1] for i in range(len(cnt))]
+	y_list = [cnt[i][0][0] for i in range(len(cnt))]
+	return min(x_list), max(x_list)+ 1, min(y_list), max(y_list) + 1
+
 
 def opencv_to_pil(opencv_im):
 	opencv_im = cv2.cvtColor(opencv_im,cv2.COLOR_BGR2RGB)
@@ -84,6 +90,7 @@ def get_gameboard(img):
 	thresh = simple_threshold(opencv_image)
 	opencv_image = find_contours_and_invert(thresh)
 	pil_image = opencv_to_pil(opencv_image)
+	# pil_image.save("debugging2.jpg")
 	gameboard = pytesseract.image_to_string(pil_image, config="-psm 6")
 	return gameboard, color_map
 

@@ -1,6 +1,4 @@
 from random import shuffle
-import cPickle as pickle
-import redis
 
 class Node:
     def __init__(self, data):
@@ -47,3 +45,4 @@ class TernarySearchTree:
             if i+1 == len(word):
                 return (root.is_end_of_str, True)
             return self.search(root.eq, word, i+1)
+

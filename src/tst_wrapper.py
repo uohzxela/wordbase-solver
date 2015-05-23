@@ -5,7 +5,7 @@ t = None
 if __name__ == "__main__":
     while True:
         if not t:
-            t = tst.TernarySearchTree()
+            t = tst.TreeJudge()
         print "Input search term:"
         word = sys.stdin.readline().strip()
         (is_valid, is_prefix) = t.find(word)

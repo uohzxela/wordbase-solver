@@ -23,12 +23,15 @@ def hello():
 @app.route('/upload', methods=['POST'])
 def upload():
 	file = request.files['file']
-
+	if not os.path.isdir(UPLOAD_FOLDER):
+		os.makedirs(UPLOAD_FOLDER)
+		
 	if file and allowed_file(file.filename):
+		color = request.form["color"]
 		filename = secure_filename(file.filename)
 		img_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 		file.save(img_path)
-		res = solver.solve("blue", img_path, 'src/Word-List.txt')
+		res = solver.solve(color, img_path, 'src/Word-List.txt')
 		return " ".join([x[0] for x in res])
 	return "failure"
 

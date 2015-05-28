@@ -44,8 +44,8 @@ def find_contours_and_invert(opencv_image):
 		area = cv2.contourArea(cnt)
 		if area > 3000:
 			# cv2.drawContours(im, [cnt], 0, (0, 0, 255), 3)
-			# print cnt
-			# print area
+			print cnt
+			print area
 			start_x, end_x, start_y, end_y = find_contour_boundaries(cnt)
 			im[start_x:end_x,start_y:end_y] = 255 - im[start_x:end_x,start_y:end_y]
 	return im
@@ -67,14 +67,14 @@ def generate_color_map(opencv_im):
 	for x in xrange(0, 832, 64):
 		for y in xrange(0, 640, 64):
 			px = img[x+1, y+1]
-			# print px
+			print px
 			blue = px[0]
 			green = px[1]
 			if blue == 0 and green==0:
 				a[x/64,y/64] = BLACK
 			elif blue <= 100:
 				a[x/64,y/64] = ORANGE
-			elif blue == 255:
+			elif blue >= 250:
 				a[x/64,y/64] = WHITE
 			else:
 				a[x/64, y/64] = BLUE 
@@ -90,7 +90,7 @@ def get_gameboard(img):
 	thresh = simple_threshold(opencv_image)
 	opencv_image = find_contours_and_invert(thresh)
 	pil_image = opencv_to_pil(opencv_image)
-	# pil_image.save("debugging2.jpg")
+	pil_image.save("debugging2.jpg")
 	gameboard = pytesseract.image_to_string(pil_image, config="-psm 6")
 	return gameboard, color_map
 

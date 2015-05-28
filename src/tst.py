@@ -46,3 +46,23 @@ class TernarySearchTree:
                 return (root.is_end_of_str, True)
             return self.search(root.eq, word, i+1)
 
+# TreeJudge is coded by Stefan Pochmann: https://gist.github.com/pochmann/adcd1e046c62390fd61b
+
+class TreeJudge:
+    def __init__(self, word_list_path='Word-List.txt'):
+        self.root = {}
+        with open(word_list_path) as f:
+            for line in f:
+                word = line.strip()
+                node = self.root
+                for letter in word:
+                    node = node.setdefault(letter, {})
+                node[None] = None
+ 
+    def find(self, word):
+        node = self.root
+        for letter in word:
+            if letter not in node:
+                return False, False
+            node = node[letter]
+        return None in node, True

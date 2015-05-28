@@ -2,7 +2,6 @@ import extractor
 import tst
 import sys
 from operator import itemgetter
-import Pyro4
 
 WHITE = 0
 ORANGE = 1
@@ -57,27 +56,26 @@ def find_words(graph, matrix, position, prefix, results, dictionary):
 			find_words(graph, matrix, child, child_prefix, results, dictionary)
 	return
 
+def solve(color, img_path, word_list_path=None):
+	player = PLAYER_MAP[color]
+	matrix, color_map = extractor.get_matrix(img_path)
+	for i, row in enumerate(matrix):
+		print row
+	dictionary = tst.TreeJudge(word_list_path) if word_list_path else tst.TreeJudge()
+	graph = make_graph(matrix, color_map, player)
+	res = set()
+	find_words(graph, matrix, None, [], res, dictionary)
+	res = list(res)
+	if player == ORANGE:
+		return sorted(res, key=itemgetter(1), reverse=True)
+	else:
+		return sorted(res, key=itemgetter(1))
+
 def main():
-	try:
-		if len(sys.argv) == 3:
-			player = PLAYER_MAP[sys.argv[1].lower()]
-			matrix, color_map = extractor.get_matrix(sys.argv[2])
-			for i, row in enumerate(matrix):
-				print row
-			dictionary = tst.TernarySearchTree()
-			#dictionary = Pyro4.Proxy("PYRONAME:tst.server")
-			graph = make_graph(matrix, color_map, player)
-			res = set()
-			find_words(graph, matrix, None, [], res, dictionary)
-			res = list(res)
-			if player == ORANGE:
-				print sorted(res, key=itemgetter(1), reverse=True)
-			else:
-				print sorted(res, key=itemgetter(1))
-		else:
-			raise Exception("Wrong number of arguments!")
-	except:
-		sys.stderr.write('Usage: python solver.py [blue/orange] [/path/to/screenshot.jpg]\n')
-		exit(2)
+	if len(sys.argv) == 3:
+		print solve(sys.argv[1].lower(), sys.argv[2])
+	else:
+		raise Exception("Wrong number of arguments!")
+
 if __name__ == '__main__':
     main()

@@ -7,6 +7,10 @@ WHITE = 0
 ORANGE = 1
 BLUE = 2
 BLACK = 3
+
+WIDTH = 640
+HEIGHT = 1136
+
 # image_file_path is supplied from command line args
 # resize to 640 x 1136 before doing anything
 def resize_and_crop(image_file_path):
@@ -15,10 +19,10 @@ def resize_and_crop(image_file_path):
 	except IOError:
 		sys.stderr.write('ERROR: Could not open file "%s"\n' % image_file_path)
 		exit(1)
-	size = (640, 1136)
+	size = (WIDTH, HEIGHT)
 	pil_image.thumbnail(size, Image.ANTIALIAS)
 
-	pil_image = pil_image.crop((0,304,640,1136))
+	pil_image = pil_image.crop((0,304,WIDTH,HEIGHT))
 	# pil_image.save("debugging.jpg")
 	return pil_image
 
@@ -34,18 +38,18 @@ def simple_threshold(opencv_image):
 	return thresh
 
 # find blobs of white and invert it to black
-def find_contours_and_invert(opencv_image):
+def find_contours_and_invert(opencv_image, eroded):
 	im = cv2.cvtColor(opencv_image, cv2.COLOR_GRAY2BGR)
-	im_binary = opencv_image
-	contours, hierarchy = cv2.findContours(im_binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+	# im_binary = opencv_image
+	contours, hierarchy = cv2.findContours(eroded, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 	index  = 0;
 	for index in range(len(contours)):
 		cnt = contours[index]
 		area = cv2.contourArea(cnt)
 		if area > 3000:
 			# cv2.drawContours(im, [cnt], 0, (0, 0, 255), 3)
-			print cnt
-			print area
+			# print cnt
+			# print area
 			start_x, end_x, start_y, end_y = find_contour_boundaries(cnt)
 			im[start_x:end_x,start_y:end_y] = 255 - im[start_x:end_x,start_y:end_y]
 	return im
@@ -53,7 +57,18 @@ def find_contours_and_invert(opencv_image):
 def find_contour_boundaries(cnt):
 	x_list = [cnt[i][0][1] for i in range(len(cnt))]
 	y_list = [cnt[i][0][0] for i in range(len(cnt))]
-	return min(x_list), max(x_list)+ 1, min(y_list), max(y_list) + 1
+
+	min_x = min(x_list) - 2 if min(x_list) - 2 >= 0 else 0
+	max_x = max(x_list) + 3 if max(x_list) + 3 < HEIGHT else HEIGHT
+	min_y = min(y_list) - 2 if min(y_list) - 2 >= 0 else 0
+	max_y = max(y_list) + 3 if max(y_list) + 3 < WIDTH else WIDTH
+
+	# print "min_x", min_x
+	# print "max_x", max_x
+	# print "min_y", min_y
+	# print "max_y", max_y
+
+	return min_x, max_x, min_y, max_y
 
 
 def opencv_to_pil(opencv_im):
@@ -67,7 +82,7 @@ def generate_color_map(opencv_im):
 	for x in xrange(0, 832, 64):
 		for y in xrange(0, 640, 64):
 			px = img[x+1, y+1]
-			print px
+			# print px
 			blue = px[0]
 			green = px[1]
 			if blue == 0 and green==0:
@@ -88,9 +103,15 @@ def get_gameboard(img):
 	opencv_image = pil_to_opencv(pil_image)
 	color_map = generate_color_map(opencv_image)
 	thresh = simple_threshold(opencv_image)
-	opencv_image = find_contours_and_invert(thresh)
+
+	# quick hack to erode boundaries of diagonal inverted boxes so that they won't stick together, 
+	# which makes it difficult to get the 4 standalone boundary points for each.
+	kernel = np.ones((5,5), np.uint8)
+	eroded = cv2.erode(thresh, kernel, iterations = 1)
+
+	opencv_image = find_contours_and_invert(thresh, eroded)
 	pil_image = opencv_to_pil(opencv_image)
-	pil_image.save("debugging2.jpg")
+	# pil_image.save("debugging2.jpg")
 	gameboard = pytesseract.image_to_string(pil_image, config="-psm 6")
 	return gameboard, color_map
 

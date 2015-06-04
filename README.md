@@ -18,8 +18,8 @@ Wordbase Solver is live! http://wordbase.alexjiao.com
     * Contour finding is used to find inverted regions and invert them
     * Erosion is used to deal with tricky cases where two diagonal regions stick with each other
 * Tesseract is used to recognize individual characters from the intermediate B&W image
-* Characters are stored in a 2D array using Python's Numpy library, along with its color mapping
-* A tree data structure is initialized to store valid English words from the dictionary with O(w) lookup where w is the length of the word
+* Characters are stored in a 2D array, along with its color mapping.
+* A tree data structure is initialized to store 170k+ valid English words from the dictionary with O(w) lookup where w is the length of the word
 * A graph of characters and their neighbors is created from the 2D array, and DFS is employed to find all valid words
 * The suggested list of valid words is sorted according to the word's promixity to the opponent's base depending on the player's color (the nearer, the better).
 

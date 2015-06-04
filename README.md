@@ -1,20 +1,30 @@
 # wordbase-solver
 
-Dependencies
-* OpenCV and Python bindings 
-* [pytesseract](https://github.com/madmaze/pytesseract)
+Wordbase Solver is live! http://wordbase.alexjiao.com
 
-Usage
+##Dependencies
+* OpenCV and Python bindings 
+* [pytesseract](https://github.com/madmaze/pytesseract) for Optical Character Recognition (OCR)
+
+##Usage
 * `cd wordbase-solver/src`
 * `python extract_game_board_text.py wordbase.png` to print out the gameboard in console
 * `python tst_wrapper.py` to try out the ternary search tree loaded with dictionary 
 * `python solver.py [blue/orange] [/path/to/screenshot.jpg]` to find suitable words in the given screenshot, given the player color
 
-To-do list
+##How it works
+* The screenshot is preprocessed using OpenCV functions to generate a B&W image which makes OCR more effective
+    * Simple thresholding is used to convert the screenshot to B&W
+    * Contour finding is used to find inverted regions and invert them
+    * Erosion is used to deal with tricky cases where two diagonal regions stick with each other
+* Tesseract is used to recognize individual characters from the intermediate B&W image
+* Characters are stored in a 2D array using Python's Numpy library, along with its color mapping
+* A tree data structure is initialized to store valid English words from the dictionary with O(w) lookup where w is the length of the word
+* A graph of characters and their neighbors is created from the 2D array, and DFS is employed to find all valid words
+* The suggested list of valid words is sorted according to the word's promixity to the opponent's base depending on the player's color (the nearer, the better).
 
-1. ~~Extract out gameboard represented by a 2D array of characters~~
-2. ~~Implement a dictionary data structure (ternary search tree) with O(w) lookup where w is the length of the word~~
-3. ~~Use DFS to find all valid words in 2D array according to the dictionary~~
-4. ~~Deploy as web app (AWS EC2)~~
+##To-do list
+1. Dockerization
+2. Make web app more user-friendly
 
-Wordbase Solver is live! http://wordbase.alexjiao.com
+

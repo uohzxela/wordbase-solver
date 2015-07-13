@@ -12,6 +12,10 @@ Wordbase Solver is live! http://wordbase.alexjiao.com
 * `python tst_wrapper.py` to try out the tree loaded with dictionary 
 * `python solver.py [blue/orange] [/path/to/screenshot.jpg]` to find suitable words in the given screenshot, given the player color
 
+Base image before preprocessing            |  Intermediate image (cropped)     |   Preprocessed image used for OCR 
+:-------------------------:|:-------------------------:|:-------------------------:|:-----------------------:|
+![](http://s14.postimg.org/pwkpjcen1/sample.png)  |  ![](http://s14.postimg.org/zfpsz2crh/inverted.jpg) |  ![](http://s14.postimg.org/qw6f1b4f1/final.jpg)
+
 ##How it works
 * The screenshot is preprocessed using OpenCV functions to generate a B&W image which makes OCR more effective
     * Simple thresholding is used to convert the screenshot to B&W

@@ -15,7 +15,7 @@ Wordbase Solver is live! http://wordbase.alexjiao.com
 
 
 ##How it works
-Base image            |  Intermediate image (with inverted squares)     |   Preprocessed image used for OCR 
+Image before preprocessing           |  Intermediate image      |   Preprocessed image used for OCR 
 :-------------------------:|:-------------------------:|:-------------------------:|:-----------------------:|
 ![](http://s14.postimg.org/pwkpjcen1/sample.png)  |  ![](http://s14.postimg.org/zfpsz2crh/inverted.jpg) |  ![](http://s14.postimg.org/qw6f1b4f1/final.jpg)
 * The screenshot is preprocessed using OpenCV functions to generate a B&W image which makes OCR more effective

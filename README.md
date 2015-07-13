@@ -22,7 +22,7 @@ Image before preprocessing           |  Intermediate image      |   Preprocessed
     * Simple thresholding is used to convert the screenshot to B&W
     * Contour finding is used to find inverted regions and invert them
     * Erosion is used to deal with tricky cases where two diagonal inverted regions stick with each other, making it difficult to obtain the contours
-* Tesseract is used to recognize individual characters from the intermediate B&W image
+* Tesseract is used to recognize individual characters from the preprocessed B&W image
 * Characters are stored in a 2D array, along with its color mapping.
 * A tree data structure is initialized to store 170k+ English words from the dictionary with O(w) lookup where w is the length of the word
 * A graph of characters and their neighbors is created from the 2D array, and DFS is employed to find all valid words from the graph
